@@ -1,0 +1,304 @@
+/* Документ содержит описание вызовов в формате JSON-RPC
+ * (http://www.jsonrpc.org/specification).
+ * 
+ * 
+ */
+
+{
+
+/*
+ * Сделать исходящий вызов
+ * 
+ * method:  "initCall"
+ * 
+ * params:  "number": номер телефона
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"initCall","params":{"number":"1234567"}}
+ */
+"initCall": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+        "number":           "string",
+    }
+},
+
+/*
+ * Ответить на входящий звонок
+ * 
+ * method:  "answerCall"
+ * 
+ * params:  нет
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"answerCall"}
+ */
+"answerCall": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+    }
+},
+
+/*
+ * Нажать кнопку "Hold" 
+ * 
+ * method:  "pressHold"
+ * 
+ * params:  нет
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"pressHold"}
+ */
+"pressHold": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+    }
+},
+
+/*
+ * Нажать кнопку "Conference" 
+ * 
+ * method:  "pressConference"
+ * 
+ * params:  нет
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"pressConference"}
+ */
+"pressConference": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+    }
+},
+
+/*
+ * Положить трубку
+ * 
+ * method:  "dropCall"
+ * 
+ * params:  нет
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"dropCall"}
+ */
+"dropCall": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+    }
+},
+
+/*
+ * Завершить обслуживание вызова
+ * 
+ * method:  "closeProcess"
+ * 
+ * params:  "processid":    идентификатор процесса
+ *          "exitcode":     код завершения
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"closeProcess","params":{"processid":"14213451234567splink1","exitcode":2}}
+ */
+"closeProcess": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+        "processid":        "string",
+        "exitcode":         "number",
+    }
+},
+
+/*
+ * Переход в паузу/выход из паузы
+ * 
+ * method:  "setPauseState"
+ * 
+ * params:  "state":        0 - переход в IDLE
+ *                          или код паузы (из списка установленных в Admin Studio)
+ *                           
+ *          "comment":      комментарий
+ * 
+ * result:  нет
+ * 
+ * Пример: client -> server: {"method":"setPauseState","params":{"state":62,"comment":"обеденный перерыв"}}
+ */
+"setPauseState": {
+    "type":                 "method",
+    "target":               "server",
+
+    "params": {
+        "state":            "number",
+        "comment":          "string",
+    }
+},
+
+/*
+ * Получить информация о текущем процессе
+ * 
+ * method:  "getProcess"
+ * 
+ * params:  нет
+ * 
+ * result:  "pid":          идентификатор процесса
+ *          "type":         тип вызова
+ *                          1 - входящий звонок
+ *                          7 - входящий чат
+ *                          32 - исходящий звонок
+ *                          129 - исходящий автодозвон
+ *                          257 - исходящий коллбэк
+ *          "task":         имя задачи
+ *          "caller":       вызывающий номер
+ *          "calleв":       вызываемый номер
+ *          "username":     имя абонента (при идентификации)
+ *          "userinfo":     список полей карточки клиента в виде "имя параметра":"значение".  
+ * 
+ *          "id"            идентификатор запроса
+ *          
+ * Пример: client -> server: {"method":"getProcess"}
+ *         server -> client: {"result":{"pid":"14213451234567splink1","type":1,"task":"hotline","caller":"1234567","called":"333777"}}
+ */
+"getProcess": {
+    "type":                 "method",
+    "target":               "client",
+
+    "params": {
+    },
+    
+    "result": {
+        "pid":              "string",
+        "type":             "number",
+        "task":             "string",
+        "caller":           "string",
+        "called":           "string",
+        "username":         "string",
+        "userinfo":         ["key:value"]
+    },
+
+    "id":                   "number"
+},
+
+/*
+ * Получить текущее состояние агента
+ * 
+ * method:  "getState"
+ * 
+ * params:  нет
+ * 
+ * result:  "state":        0 - не зарегистрирован
+ *                          1 - пауза
+ *                          3 - поступил входящий вызов
+ *                          4 - выполняется исходящий вызов
+ *                          5 - соединение по входящему вызову
+ *                          6 - поствызывная работа
+ *                          7 - занят выполнением задачи (не связанной со звонком)
+ *                          8 - свободен
+ *                          9 - соединение по исходящему вызову
+ *                          
+ *          "substate":     код паузы для состояния 1 (из списка установленных в Admin Studio)
+ * 
+ *          "id"            идентификатор запроса
+ *           
+ * Пример: client -> server: {"method":"getState"}
+ *         server -> client: {"result":{"state":3,"substate":0}}
+ */
+"getState": {
+    "type":                 "method",
+    "target":               "client",
+
+    "params": {  
+    },
+    
+    "result": {
+        "state":            "number",
+        "substate":         "number",
+    },
+
+    "id":                   "number"
+},
+
+
+/*
+ * Информация о процессе. Передается от сервкра клиенту при поступлении или инициации вызова
+ * 
+ * method:  "setProcess"
+ * 
+ * params:  "pid":          идентификатор процесса
+ *          "type":         тип вызова
+ *                          1 - входящий звонок
+ *                          7 - входящий чат
+ *                          32 - исходящий звонок
+ *                          129 - исходящий автодозвон
+ *                          257 - исходящий коллбэк
+ *          "task":         имя задачи
+ *          "caller":       вызывающий номер
+ *          "calleв":       вызываемый номер
+ *          "username":     имя абонента (при идентификации)
+ *          "userinfo":     список полей карточки клиента в виде "имя параметра":"значение".  
+ * 
+ * result:  нет
+ * 
+ * Пример: server -> client: {"method":"setProcess","params":{"pid":"14213451234567splink1","type":1,"task":"hotline","caller":"1234567","called":"333777"}}
+ */
+"setProcess": {
+    "type":                 "method",
+    "target":               "client",
+
+    "params": {
+        "pid":              "string",
+        "type":             "number",
+        "task":             "string",
+        "caller":           "string",
+        "called":           "string",
+        "username":         "string",
+        "userinfo":         ["key:value"]
+    }
+},
+
+/*
+ * Индикация смены состояния агента
+ * 
+ * method:  "setState"
+ * 
+ * result:  "state":        0 - не зарегистрирован
+ *                          1 - пауза
+ *                          3 - поступил входящий вызов
+ *                          4 - выполняется исходящий вызов
+ *                          5 - соединение по входящему вызову
+ *                          6 - поствызывная работа
+ *                          7 - занят выполнением задачи (не связанной со звонком)
+ *                          8 - свободен
+ *                          9 - соединение по исходящему вызову
+ * 
+ *          "substate":     код паузы для состояния 1 (из списка установленных в Admin Studio)
+ *          
+ * result:  нет
+ * 
+ * Пример: server -> client: {"method":"setState","params":{"state":3,"substate":0}}
+ */
+"setState": {
+    "type":                 "method",
+    "target":               "client",
+
+    "params": {
+        "state":            "number",
+        "substate":         "number",
+    }
+},
+
+}
