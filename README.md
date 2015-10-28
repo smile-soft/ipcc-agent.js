@@ -32,9 +32,7 @@ The following options are available:
 Option          | Description
 ----------------|----------------
 `server`        | `String`. IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
-----------------|----------------
 `websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
-----------------|----------------
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
 
 
