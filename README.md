@@ -12,6 +12,12 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Close specified process
 - Get current state and process
 
+### Features implemented out of the box
+- Websocket connection and events management
+- Websocket recconection exponential backoff algorithm
+- Fallback to XMLHttpRequest if browser has no Websocket protocol support
+- Pub/Sub implementation for custom event management
+
 ### Getting started
 1. Download and unzip library's archive
 2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
@@ -44,3 +50,7 @@ Option          | Description
 
 ### How to use
 Library's API expose the following mothods:
+
+### Error handling
+
+
