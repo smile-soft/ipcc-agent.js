@@ -1,6 +1,6 @@
 # IPCC-Agent.js
 ### About
-This is an official javascript module that provides a wrapper around Smile IPCC Agent API. 
+This is official javascript module that provides a wrapper around Smile IPCC Agent API. 
 It exposes a simple API to operate main Agent's functionality, such as:
 - Answer to incoming call
 - Initiate outgoing call
@@ -8,19 +8,20 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Set Agent into PAUSE state
 - Switch from WRAP to IDLE state
 - Press the conference button
-- Press the hold butto
+- Press the hold button
 - Close specified process
 - Get current state and process
 
 ### Features implemented out of the box
 - Websocket connection and events management
-- Websocket recconection exponential backoff algorithm
+- Websocket reconnection exponential backoff algorithm
 - Fallback to XMLHttpRequest if browser has no Websocket protocol support
 - Pub/Sub implementation for custom event management
 
 ### Installation
 1. Download and unzip module's archive
 2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
+
 ```html
 <script src="IPCCAgent.js"></script>
 ```
@@ -30,11 +31,11 @@ or
 ```
 Note: include lib's script before your web application javascript flies
 
-Note: If you are using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
+Note: If you are using Smile IPCC built-in web server for your web application than your destination directory on the server would be
 ```
 <path to Smile IPCC directory on the server>/web/
 ```
-otherwise put files to your web server accordingly to your web application structure.
+otherwise put files to your web server according to your web application structure.
 
 ### Getting started
 Module exposes one global object `SmileSoft`, which emits global events from all connected modules. It has three public methods:
@@ -48,11 +49,11 @@ var agent = SmileSoft.Agent(options);
 ```
 `options` is an optional object, which could contain the following parameters:
 
-Option          | Description
-----------------|----------------
-`server`        | `String`. IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
-`websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
-`updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
+Option          | Type            | Description
+----------------|-----------------|----------------
+`server`        | `String`        | IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
+`websockets`    | `Boolean`       | Default `true`. Set `false` to switch to `XMLHttpRequest`.
+`updateInterval`| `Number`        | Default `1000` ms (1 second). If `websockets` is `false`, this defines how often module will request updates from IPCC server
 
 #### Event management
 Ways to subscribe for event
@@ -97,7 +98,7 @@ Parameters:
 - `state`: agent state (see Agent states) 
 - `substate`: agent substate (see Agent substates)
 
-##### `processchange` - process changed (e.g. when receive or init call)
+##### `processchange` - process changed (e.g. when receiving or initiating a call)
 Parameters:
 - `pid`: process id
 - `type`: process type (see process types)
@@ -105,7 +106,7 @@ Parameters:
 - `caller`: caller number
 - `called`: called number
 - `username`: caller name (if identified)
-- `userinfo`: list of fields of client's card like "<param>:<value>"
+- `userinfo`: list of fields of client's card in format "param":"value"
 
 ### API
 Your can use module's API like this:
@@ -123,7 +124,7 @@ Emit module event
 #### `process`
 Returns current process parameters
 #### `state`
-Returns agebt current state
+Returns agent current state
 #### `substate`
 Returns agent current substate
 #### `call`
@@ -151,7 +152,7 @@ SmileSoft.on('Agent.Error', handler);
 agent.on('Error', handler);
 ```
 Error object passed to the callback function:
-- `module`: module name, which emit the error
+- `module`: name of the module that emitted the error
 - `error`: error object
 
 ### Lisence
