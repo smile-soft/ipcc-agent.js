@@ -13,20 +13,32 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Get current state and process
 
 ### Getting started
-1. Download and unzip library's files
+1. Download and unzip library's archive
 2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
-```
+```html
 <script src="IPCCAgent.js"></script>
 ```
 or
-```
+```html
 <script src="IPCCAgent.min.js"></script>
 ```
-3. 
+Note: include lib's script before your web application javascript flies
+3. Initiate script with custom options or predefined defaults
+```js
+var agent = SmileSoft.Agent([options]);
+```
+The following options are available:
+Option          | Description
+----------------|----------------
+`server`        | IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
+`websockets`    | Default `true`. Set `false` to switch to `XMLHttpRequest`.
+`updateInterval`| Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
+
 
 Note: If you are using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
-
-`<path to Smile IPCC directory on the server>/web/`
+```
+<path to Smile IPCC directory on the server>/web/
+```
 
 otherwise put files to your web server accordingly to your web application structure.
 
