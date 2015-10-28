@@ -37,34 +37,12 @@ Note: If you are using Smile IPCC built-in web server for your web application, 
 otherwise put files to your web server accordingly to your web application structure.
 
 ### Getting started
-Module exposes one global object `SmileSoft`, which emits global events from all connected modules.
+Module exposes one global object `SmileSoft`, which emits global events from all connected modules. It has three public methods:
+- `on`: subscribe for global events
+- `emit`: emit global event
+- `Agent`: function that when called returns module public API
 
-Currently module emits the following events:
-###### `statechange` - Emits when agent state changed (e.g. from WRAP to IDLE)
-- `state`: agent state (see Agent states) 
-- `substate`: agent substate (see Agent substates)
-
-###### `processchange` - Emits when process changed (e.g. when receive or init call)
-- `pid`: process id
-- `type`: process type (see process types)
-- `task`: task name
-- `caller`: caller number
-- `called`: called number
-- `username`: caller name (if identified)
-- `userinfo`: list of fields of client's card like "<param>:<value>"
-
-There are two ways to subscribe for event:
-1. Subscribe for global event
-```js
-SmileSoft.on([moduleName.]eventName, callback);
-```
-2. Subscribe for module's event
-```js
-var agent = SmileSoft.Agent();
-agent.on(eventName, callback);
-```
-
-Initiate script with custom options or predefined defaults
+##### Initiate script with custom options or defaults
 ```js
 var agent = SmileSoft.Agent(options);
 ```
@@ -75,6 +53,59 @@ Option          | Description
 `server`        | `String`. IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
 `websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
+
+##### Event management
+Ways to subscribe for event
+- Subscribe for global event
+
+```js
+SmileSoft.on([moduleName.]eventName, callback);
+```
+- Subscribe for module event
+
+```js
+var agent = SmileSoft.Agent();
+agent.on(eventName, callback);
+```
+
+Ways to emit event
+- Emit global event
+
+```js
+SmileSoft.emit([moduleName.]eventName, parameters);
+```
+- Emit module event
+
+```js
+var agent = SmileSoft.Agent();
+agent.emit(eventName, parameters);
+```
+
+Unsubscribe from event
+```js
+var agent = SmileSoft.Agent();
+var event = agent.on(eventName, callback);
+
+// Some time in the future
+event.off();
+```
+
+Currently module emits the following events:
+##### `ready` - module initiated
+##### `statechange` - agent state changed (e.g. from WRAP to IDLE)
+Parameters:
+- `state`: agent state (see Agent states) 
+- `substate`: agent substate (see Agent substates)
+
+##### `processchange` - process changed (e.g. when receive or init call)
+Parameters:
+- `pid`: process id
+- `type`: process type (see process types)
+- `task`: task name
+- `caller`: caller number
+- `called`: called number
+- `username`: caller name (if identified)
+- `userinfo`: list of fields of client's card like "<param>:<value>" | a;ksdjaslkfjsdlkf
 
 ### API
 Module's API expose the following methods:
