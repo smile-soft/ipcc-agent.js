@@ -20,7 +20,7 @@ It exposes a simple API to operate main Agent's functionality, such as:
 
 ### Installation
 1. Download and unzip module's archive
-2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
+2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application html flies
 
 ```html
 <script src="IPCCAgent.js"></script>
@@ -29,7 +29,7 @@ or
 ```html
 <script src="IPCCAgent.min.js"></script>
 ```
-Note: include lib's script before your web application javascript flies
+Note: include script before your web application javascript flies
 
 Note: If you are using Smile IPCC built-in web server for your web application than your destination directory on the server would be
 ```
