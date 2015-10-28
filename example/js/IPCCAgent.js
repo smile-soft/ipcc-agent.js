@@ -117,7 +117,7 @@
 	function callbackOnId(id, data){
         if(id === 5){
             if(data.state !== 0 && data.state !== 1 && data.state !== 6 && data.state !== 8){
-                api.getProcess();
+                getProcess();
             }
             setState(data);
         }
@@ -128,14 +128,14 @@
 
 	function setStateRequestInterval(){
 		updateStateInterval = setInterval(function(){
-			api.getState();
+			getState();
 		}, options.updateInterval);
     }
 
     function onWebsocketOpen(){
         console.log('Websocket opened');
         emit('ready');
-        api.getState();
+        getState();
     }
 
     function onWebsocketMessage(e){
@@ -265,6 +265,41 @@
 	}
 
 	/**
+	 * Get information of current process
+	 * List of process ids:
+	 * 1 - 'Incoming call'
+	 * 7 - 'Incoming chat'
+	 * 32 - 'Outgoing call'
+	 * 129 - 'Outgoing autodial'
+	 * 257 -  'Outgoing callback'
+	 * 
+	 * @return {Object} current process information
+	 */
+	function getProcess(){
+		sendRequest('getProcess', null, (options.websockets ? 7 : setProcess));
+	}
+
+	/**
+	 * Get information of current client's state
+	 * Possible states:
+	 * 0 - 'Unregistered'
+	 * 1 - 'Pause'
+	 * 3 - 'Incoming call'
+	 * 4 - 'Outgoing call'
+	 * 5 - 'Connected with incomming call'
+	 * 6 - 'Wrap'
+	 * 7 - 'Generic task'
+	 * 8 - 'Idle'
+	 * 9 - 'Connected with outgoing call'
+	 * 
+	 * @return {Object} current client's state
+	 * 
+	 */
+	function getState(){
+		sendRequest('getState', null, (options.websockets ? 5 : setState));
+	}
+
+	/**
 	 * State chage event received from the server
 	 */
 	function setState(stateInfo){
@@ -296,8 +331,6 @@
 
 	api = {
 
-		init: client,
-
 		// Current process info
 		process: {},
 
@@ -312,41 +345,6 @@
 
 		// Event emitting function
 		emit: emit,
-
-		/**
-		 * Get information of current process
-		 * List of process ids:
-		 * 1 - 'Incoming call'
-		 * 7 - 'Incoming chat'
-		 * 32 - 'Outgoing call'
-		 * 129 - 'Outgoing autodial'
-		 * 257 -  'Outgoing callback'
-		 * 
-		 * @return {Object} current process information
-		 */
-		getProcess: function(){
-			sendRequest('getProcess', null, (options.websockets ? 7 : setProcess));
-		},
-
-		/**
-		 * Get information of current client's state
-		 * Possible states:
-		 * 0 - 'Unregistered'
-		 * 1 - 'Pause'
-		 * 3 - 'Incoming call'
-		 * 4 - 'Outgoing call'
-		 * 5 - 'Connected with incomming call'
-		 * 6 - 'Wrap'
-		 * 7 - 'Generic task'
-		 * 8 - 'Idle'
-		 * 9 - 'Connected with outgoing call'
-		 * 
-		 * @return {Object} current client's state
-		 * 
-		 */
-		getState: function(){
-			sendRequest('getState', null, (options.websockets ? 5 : setState));
-		},
 
 		/**
 		 * Initiate outgoing call
