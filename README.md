@@ -28,6 +28,7 @@ Note: include lib's script before your web application javascript flies
 var agent = SmileSoft.Agent([options]);
 ```
 The following options are available:
+
 Option          | Description
 ----------------|----------------
 `server`        | IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
