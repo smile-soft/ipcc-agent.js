@@ -40,7 +40,7 @@ otherwise put files to your web server accordingly to your web application struc
 Module exposes one global object `SmileSoft`, which emits global events from all connected modules. It has three public methods:
 - `on`: subscribe for global events
 - `emit`: emit global event
-- `Agent`: function that when called returns module public API
+- `Agent`: function that when called return module public API
 
 #### Initiate module
 ```js
@@ -105,10 +105,44 @@ Parameters:
 - `caller`: caller number
 - `called`: called number
 - `username`: caller name (if identified)
-- `userinfo`: list of fields of client's card like "<param>:<value>" | a;ksdjaslkfjsdlkf
+- `userinfo`: list of fields of client's card like "<param>:<value>"
 
 ### API
-Module's API expose the following methods:
+Your can use module's API like this:
+```js
+// First initiate the module
+var agent = SmileSoft.Agent([options]);
+// Than for example
+agent.call('380951234567');
+```
+API expose the following methods:
+#### `on`
+Subscribe for module events
+#### `emit`
+Emit module event
+#### `process`
+Returns current process parameters
+#### `statee`
+Returns agebt current state
+#### `substate`
+Returns agent current substate
+#### `call`
+Initiate outgoing call to specified number
+#### `answer`
+Answer to current incoming call
+#### `hold`
+Press hold button
+#### `idle`
+Switch to IDLE state (only from WRAP or PAUSE states).
+#### `conference`
+Press conference button
+#### `drop`
+Drop current call
+#### `close`
+Close current process with specified exit code
+#### `pause`
+Switch to PAUSE state with the specified pause code
+
 
 ### Error handling
 
