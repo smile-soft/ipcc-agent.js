@@ -49,7 +49,7 @@ Option          | Description
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
 
 ### How to use
-Library's API expose the following mothods:
+Library's API expose the following methods:
 
 ### Error handling
 
