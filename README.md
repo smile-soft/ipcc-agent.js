@@ -122,7 +122,7 @@ Subscribe for module events
 Emit module event
 #### `process`
 Returns current process parameters
-#### `statee`
+#### `state`
 Returns agebt current state
 #### `substate`
 Returns agent current substate
@@ -143,12 +143,16 @@ Close current process with specified exit code
 #### `pause`
 Switch to PAUSE state with the specified pause code
 
-
 ### Error handling
-
-### Examples
+To handle errors you can subscribe for `Error` event.
+```js
+SmileSoft.on('Agent.Error', handler);
+or
+agent.on('Error', handler);
+```
+Parameters:
+- `module`: module name, which emit the error
+- `error`: error object
 
 ### Lisence
-
-
-
+MIT
