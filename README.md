@@ -13,11 +13,22 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Get current state and process
 
 ### Getting started
-If you prefer using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
+1. Download and unzip library's files
+2. Add scripts `IPCCAgent.js` or minified version `IPCCAgent.min.js` to your web application's html flies
+```
+<script src="IPCCAgent.js"></script>
+```
+or
+```
+<script src="IPCCAgent.min.js"></script>
+```
+3. 
+
+Note: If you are using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
 
 `<path to Smile IPCC directory on the server>/web/`
 
-
+otherwise put files to your web server accordingly to web application structure.
 
 ### How to use
 Library's API expose the following mothods:
