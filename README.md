@@ -18,7 +18,7 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Fallback to XMLHttpRequest if browser has no Websocket protocol support
 - Pub/Sub implementation for custom event management
 
-### Getting started
+### Installation
 1. Download and unzip library's archive
 2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
 ```html
@@ -36,11 +36,14 @@ Note: If you are using Smile IPCC built-in web server for your web application, 
 ```
 otherwise put files to your web server accordingly to your web application structure.
 
-3. Initiate script with custom options or predefined defaults
+### Getting started
+Library exposes global object `SmileSoft`.
+
+Initiate script with custom options or predefined defaults
 ```js
-var agent = SmileSoft.Agent([options]);
+var agent = SmileSoft.Agent(options);
 ```
-The following options are available:
+`options` is an optional object, which could contain the following parameters:
 
 Option          | Description
 ----------------|----------------
@@ -48,9 +51,22 @@ Option          | Description
 `websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
 
-### How to use
+Library exposes Pub/Sub event management system to handle events received from the IPCC server.
+
+To subscripbe for event
+```js
+var agent = SmileSoft.Agent();
+agent.on(eventName, callback);
+```
+
+### API
 Library's API expose the following methods:
 
 ### Error handling
+
+### Examples
+
+### Lisence
+
 
 
