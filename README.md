@@ -42,7 +42,7 @@ Module exposes one global object `SmileSoft`, which emits global events from all
 - `emit`: emit global event
 - `Agent`: function that when called returns module public API
 
-##### Initiate script with custom options or defaults
+#### Initiate module
 ```js
 var agent = SmileSoft.Agent(options);
 ```
@@ -54,7 +54,7 @@ Option          | Description
 `websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
 
-##### Event management
+#### Event management
 Ways to subscribe for event
 - Subscribe for global event
 
