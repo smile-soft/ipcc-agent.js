@@ -23,11 +23,13 @@ or
 <script src="IPCCAgent.min.js"></script>
 ```
 Note: include lib's script before your web application javascript flies
+
 Note: If you are using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
 ```
 <path to Smile IPCC directory on the server>/web/
 ```
 otherwise put files to your web server accordingly to your web application structure.
+
 3. Initiate script with custom options or predefined defaults
 ```js
 var agent = SmileSoft.Agent([options]);
