@@ -1,6 +1,6 @@
 # IPCC-Agent.js
 ### About
-This is an official javascript library that provides a wrapper around Smile IPCC Agent API. 
+This is an official javascript module that provides a wrapper around Smile IPCC Agent API. 
 It exposes a simple API to operate main Agent's functionality, such as:
 - Answer to incoming call
 - Initiate outgoing call
@@ -19,7 +19,7 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Pub/Sub implementation for custom event management
 
 ### Installation
-1. Download and unzip library's archive
+1. Download and unzip module's archive
 2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
 ```html
 <script src="IPCCAgent.js"></script>
@@ -37,7 +37,32 @@ Note: If you are using Smile IPCC built-in web server for your web application, 
 otherwise put files to your web server accordingly to your web application structure.
 
 ### Getting started
-Library exposes global object `SmileSoft`.
+Module exposes one global object `SmileSoft`, which emits global events from all connected modules.
+
+Currently module emits the following events:
+###### `statechange` - Emits when agent state changed (e.g. from WRAP to IDLE)
+- `state`: agent state (see Agent states) 
+- `substate`: agent substate (see Agent substates)
+
+###### `processchange` - Emits when process changed (e.g. when receive or init call)
+- `pid`: process id
+- `type`: process type (see process types)
+- `task`: task name
+- `caller`: caller number
+- `called`: called number
+- `username`: caller name (if identified)
+- `userinfo`: list of fields of client's card like "<param>:<value>"
+
+There are two ways to subscribe for event:
+1. Subscribe for global event
+```js
+SmileSoft.on([moduleName.]eventName, callback);
+```
+2. Subscribe for module's event
+```js
+var agent = SmileSoft.Agent();
+agent.on(eventName, callback);
+```
 
 Initiate script with custom options or predefined defaults
 ```js
@@ -51,16 +76,8 @@ Option          | Description
 `websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
 
-Library exposes Pub/Sub event management system to handle events received from the IPCC server.
-
-To subscripbe for event
-```js
-var agent = SmileSoft.Agent();
-agent.on(eventName, callback);
-```
-
 ### API
-Library's API expose the following methods:
+Module's API expose the following methods:
 
 ### Error handling
 
