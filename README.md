@@ -23,6 +23,11 @@ or
 <script src="IPCCAgent.min.js"></script>
 ```
 Note: include lib's script before your web application javascript flies
+Note: If you are using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
+```
+<path to Smile IPCC directory on the server>/web/
+```
+otherwise put files to your web server accordingly to your web application structure.
 3. Initiate script with custom options or predefined defaults
 ```js
 var agent = SmileSoft.Agent([options]);
@@ -34,14 +39,6 @@ Option          | Description
 `server`        | `String`. IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
 `websockets`    | `Boolean`. Default `true`. Set `false` to switch to `XMLHttpRequest`.
 `updateInterval`| `Number`. Default `1000` ms (1 second). If `websockets` is `false`, this will define how often to request updates from IPCC server
-
-
-Note: If you are using Smile IPCC built-in web server for your web application, than your destination directory on the server would be
-```
-<path to Smile IPCC directory on the server>/web/
-```
-
-otherwise put files to your web server accordingly to your web application structure.
 
 ### How to use
 Library's API expose the following mothods:
