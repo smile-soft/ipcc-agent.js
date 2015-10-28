@@ -150,7 +150,7 @@ SmileSoft.on('Agent.Error', handler);
 //or
 agent.on('Error', handler);
 ```
-Error parameters object:
+Error object passed to the callback function:
 - `module`: module name, which emit the error
 - `error`: error object
 
