@@ -41,7 +41,7 @@ otherwise put files to your web server according to your web application structu
 Module exposes one global object `SmileSoft`, which emits global events from all connected modules. It has three public methods:
 - `on`: subscribe for global events
 - `emit`: emit global event
-- `Agent`: function that when called return module public API
+- `Agent`: function, which returns module public API after instantiating
 
 #### Initiate module
 ```js
