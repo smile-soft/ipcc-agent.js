@@ -13,10 +13,7 @@
     "type": "git",
     "url": "https://github.com/smile-soft/ipcc-agent.js.git"
   },
-  "author": {
-    "name": "Oleksiy Braynin",
-    "email": "arro@smile-soft.com"
-  },
+  "author": "Oleksiy Braynin <arro@smile-soft.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/smile-soft/ipcc-agent.js/issues"

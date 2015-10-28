@@ -15,7 +15,7 @@
 
 				// Provide handle back for removal of subscription
 				return {
-					remove: function() {
+					off: function() {
 						delete subs[sub][index];
 					}
 				};
@@ -26,7 +26,7 @@
 
 				// Cycle through subscriptions queue, fire!
 				subs[sub].forEach(function(item) {
-					item(info != undefined ? info : {});
+					item(info !== undefined ? info : {});
 				});
 			}
 		};
@@ -44,17 +44,18 @@
 		// Exp: 192.168.1.100:8880 or www.example.com
 		server: window.location.host,
 		websockets: true,
-		updateInterval: 1000
+		updateInterval: 1000,
+		bubble: true
 	},
 
-	// Module's subscriptions
+	// Module events
 	subs = {
 		// Module initiated
-		moduleInitiated: 'moduleInitiated',
+		ready: 'ready',
 		// Received current process information
-		processChange: 'processchange',
+		processchange: 'processchange',
 		// Received current state information
-		stateChange: 'statechange'
+		statechange: 'statechange'
 	},
 
 	// Current protocol
@@ -70,13 +71,13 @@
 
 	initiated = false,
 
+	errormsg = '',
+
 	// Module's public api
 	api;
 
 	function on(sub, cb){
-		Instance.on(moduleName+'.'+subs[sub], function (params){
-			cb(params);
-		});
+		Instance.on(moduleName+'.'+subs[sub], cb);
 	}
 
 	function emit(sub, params){
@@ -133,7 +134,7 @@
 
     function onWebsocketOpen(){
         console.log('Websocket opened');
-        emit('moduleInitiated');
+        emit('ready');
         api.getState();
     }
 
@@ -144,7 +145,7 @@
         console.log('onWebsocketMessage data: ', data);
 
         if(data.error) {
-			Instance.emit('Error', { module: moduleName, error: data.error });
+			emit('Error', { module: moduleName, error: data.error });
         }
 
         if(data.method){
@@ -172,7 +173,7 @@
     }
 
     function onWebsocketError(error){
-		Instance.emit('Error', { module: moduleName, error: error });
+		emit('Error', { module: moduleName, error: error });
     }
 
     /**
@@ -186,7 +187,7 @@
 			if(websocket !== undefined) websocket.close();
 			console.log('Switched to XMLHttpRequest');
 			setStateRequestInterval();
-			emit('moduleInitiated');
+			emit('ready');
 		}
 		else{
 			if(!window.WebSocket) {
@@ -250,7 +251,7 @@
 						parsedJSON = JSON.parse(xhr.response);
 						if(parsedJSON.error) {
 							err = parsedJSON.error;
-							Instance.emit('Error', { module: moduleName, error:  err});
+							emit('Error', { module: moduleName, error:  err});
 						}
 						if(callback) {
 							callback(parsedJSON.result);
@@ -267,7 +268,7 @@
 	 * State chage event received from the server
 	 */
 	function setState(stateInfo){
-		emit('stateChange', stateInfo);
+		emit('statechange', stateInfo);
 	}
 
 	/**
@@ -276,7 +277,7 @@
 	 * @return none
 	 */
 	function setProcess(processInfo){
-		emit('processChange', processInfo);
+		emit('processchange', processInfo);
 	}
 
 	/**
@@ -295,6 +296,8 @@
 
 	api = {
 
+		init: client,
+
 		// Current process info
 		process: {},
 
@@ -303,6 +306,12 @@
 
 		// Current substate
 		substate: null,
+
+		// Event subscription function
+		on: on,
+
+		// Event emitting function
+		emit: emit,
 
 		/**
 		 * Get information of current process
@@ -341,7 +350,7 @@
 
 		/**
 		 * Initiate outgoing call
-		 * @param  {Number} number telephone number to dial
+		 * @param  {String} number telephone number to dial
 		 * @return none
 		 */
 		call: function(number){
@@ -362,6 +371,19 @@
 		 */
 		hold: function(){
 			sendRequest('pressHold');
+		},
+
+		/**
+		 * Change agent's state to IDLE
+		 * Could be called only if agent is either in WRAP or PAUSE states
+		 * @return none
+		 */
+		idle: function(){
+			if(api.state === 1 || api.state === 6) {
+				sendRequest('setPauseState', { state: 0 });
+			} else {
+				console.log('Not in WRAP or PAUSE, do nothing.');
+			}
 		},
 
 		/**
@@ -387,6 +409,11 @@
 		 * @return none
 		 */
 		close: function(processid, exitcode){
+			errormsg = '';
+			if(!processid) errormsg += 'processid is not defined\n';
+			if(!exitcode) errormsg += 'exitcode is not defined\n';
+			if(errormsg !== '') return console.error('Can\'t close process:\n' + errormsg);
+
 			sendRequest('closeProcess', { processid: processid, exitcode: exitcode });
 		},
 

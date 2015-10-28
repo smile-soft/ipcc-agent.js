@@ -5,11 +5,11 @@ var gulp = require('gulp'),
     notify = require('gulp-notify');
 
 gulp.task('build', function(){
-    return gulp.src('SmileAgent.js')
+    return gulp.src('IPCCAgent.js')
 	.pipe(jshint())
 	.pipe(jshint.reporter('default'))
 	.pipe(gulp.dest('example/js'))
-	.pipe(concat('SmileAgent.min.js'))
+	.pipe(concat('IPCCAgent.min.js'))
 	.pipe(uglify())
 	.pipe(gulp.dest('./'))
 	.pipe(notify({ message: "Build task complete" }));

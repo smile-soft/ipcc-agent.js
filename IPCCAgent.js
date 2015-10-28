@@ -15,7 +15,7 @@
 
 				// Provide handle back for removal of subscription
 				return {
-					remove: function() {
+					off: function() {
 						delete subs[sub][index];
 					}
 				};
@@ -26,7 +26,7 @@
 
 				// Cycle through subscriptions queue, fire!
 				subs[sub].forEach(function(item) {
-					item(info != undefined ? info : {});
+					item(info !== undefined ? info : {});
 				});
 			}
 		};
@@ -44,17 +44,18 @@
 		// Exp: 192.168.1.100:8880 or www.example.com
 		server: window.location.host,
 		websockets: true,
-		updateInterval: 1000
+		updateInterval: 1000,
+		bubble: true
 	},
 
-	// Module's subscriptions
+	// Module events
 	subs = {
 		// Module initiated
-		moduleInitiated: 'moduleInitiated',
+		ready: 'ready',
 		// Received current process information
-		processChange: 'processchange',
+		processchange: 'processchange',
 		// Received current state information
-		stateChange: 'statechange'
+		statechange: 'statechange'
 	},
 
 	// Current protocol
@@ -70,13 +71,13 @@
 
 	initiated = false,
 
+	errormsg = '',
+
 	// Module's public api
 	api;
 
 	function on(sub, cb){
-		Instance.on(moduleName+'.'+subs[sub], function (params){
-			cb(params);
-		});
+		Instance.on(moduleName+'.'+subs[sub], cb);
 	}
 
 	function emit(sub, params){
@@ -116,7 +117,7 @@
 	function callbackOnId(id, data){
         if(id === 5){
             if(data.state !== 0 && data.state !== 1 && data.state !== 6 && data.state !== 8){
-                api.getProcess();
+                getProcess();
             }
             setState(data);
         }
@@ -127,14 +128,14 @@
 
 	function setStateRequestInterval(){
 		updateStateInterval = setInterval(function(){
-			api.getState();
+			getState();
 		}, options.updateInterval);
     }
 
     function onWebsocketOpen(){
         console.log('Websocket opened');
-        emit('moduleInitiated');
-        api.getState();
+        emit('ready');
+        getState();
     }
 
     function onWebsocketMessage(e){
@@ -144,7 +145,7 @@
         console.log('onWebsocketMessage data: ', data);
 
         if(data.error) {
-			Instance.emit('Error', { module: moduleName, error: data.error });
+			emit('Error', { module: moduleName, error: data.error });
         }
 
         if(data.method){
@@ -172,7 +173,7 @@
     }
 
     function onWebsocketError(error){
-		Instance.emit('Error', { module: moduleName, error: error });
+		emit('Error', { module: moduleName, error: error });
     }
 
     /**
@@ -186,7 +187,7 @@
 			if(websocket !== undefined) websocket.close();
 			console.log('Switched to XMLHttpRequest');
 			setStateRequestInterval();
-			emit('moduleInitiated');
+			emit('ready');
 		}
 		else{
 			if(!window.WebSocket) {
@@ -250,7 +251,7 @@
 						parsedJSON = JSON.parse(xhr.response);
 						if(parsedJSON.error) {
 							err = parsedJSON.error;
-							Instance.emit('Error', { module: moduleName, error:  err});
+							emit('Error', { module: moduleName, error:  err});
 						}
 						if(callback) {
 							callback(parsedJSON.result);
@@ -264,10 +265,45 @@
 	}
 
 	/**
+	 * Get information of current process
+	 * List of process ids:
+	 * 1 - 'Incoming call'
+	 * 7 - 'Incoming chat'
+	 * 32 - 'Outgoing call'
+	 * 129 - 'Outgoing autodial'
+	 * 257 -  'Outgoing callback'
+	 * 
+	 * @return {Object} current process information
+	 */
+	function getProcess(){
+		sendRequest('getProcess', null, (options.websockets ? 7 : setProcess));
+	}
+
+	/**
+	 * Get information of current client's state
+	 * Possible states:
+	 * 0 - 'Unregistered'
+	 * 1 - 'Pause'
+	 * 3 - 'Incoming call'
+	 * 4 - 'Outgoing call'
+	 * 5 - 'Connected with incomming call'
+	 * 6 - 'Wrap'
+	 * 7 - 'Generic task'
+	 * 8 - 'Idle'
+	 * 9 - 'Connected with outgoing call'
+	 * 
+	 * @return {Object} current client's state
+	 * 
+	 */
+	function getState(){
+		sendRequest('getState', null, (options.websockets ? 5 : setState));
+	}
+
+	/**
 	 * State chage event received from the server
 	 */
 	function setState(stateInfo){
-		emit('stateChange', stateInfo);
+		emit('statechange', stateInfo);
 	}
 
 	/**
@@ -276,7 +312,7 @@
 	 * @return none
 	 */
 	function setProcess(processInfo){
-		emit('processChange', processInfo);
+		emit('processchange', processInfo);
 	}
 
 	/**
@@ -304,44 +340,15 @@
 		// Current substate
 		substate: null,
 
-		/**
-		 * Get information of current process
-		 * List of process ids:
-		 * 1 - 'Incoming call'
-		 * 7 - 'Incoming chat'
-		 * 32 - 'Outgoing call'
-		 * 129 - 'Outgoing autodial'
-		 * 257 -  'Outgoing callback'
-		 * 
-		 * @return {Object} current process information
-		 */
-		getProcess: function(){
-			sendRequest('getProcess', null, (options.websockets ? 7 : setProcess));
-		},
+		// Event subscription function
+		on: on,
 
-		/**
-		 * Get information of current client's state
-		 * Possible states:
-		 * 0 - 'Unregistered'
-		 * 1 - 'Pause'
-		 * 3 - 'Incoming call'
-		 * 4 - 'Outgoing call'
-		 * 5 - 'Connected with incomming call'
-		 * 6 - 'Wrap'
-		 * 7 - 'Generic task'
-		 * 8 - 'Idle'
-		 * 9 - 'Connected with outgoing call'
-		 * 
-		 * @return {Object} current client's state
-		 * 
-		 */
-		getState: function(){
-			sendRequest('getState', null, (options.websockets ? 5 : setState));
-		},
+		// Event emitting function
+		emit: emit,
 
 		/**
 		 * Initiate outgoing call
-		 * @param  {Number} number telephone number to dial
+		 * @param  {String} number telephone number to dial
 		 * @return none
 		 */
 		call: function(number){
@@ -362,6 +369,19 @@
 		 */
 		hold: function(){
 			sendRequest('pressHold');
+		},
+
+		/**
+		 * Change agent's state to IDLE
+		 * Could be called only if agent is either in WRAP or PAUSE states
+		 * @return none
+		 */
+		idle: function(){
+			if(api.state === 1 || api.state === 6) {
+				sendRequest('setPauseState', { state: 0 });
+			} else {
+				console.log('Not in WRAP or PAUSE, do nothing.');
+			}
 		},
 
 		/**
@@ -387,6 +407,11 @@
 		 * @return none
 		 */
 		close: function(processid, exitcode){
+			errormsg = '';
+			if(!processid) errormsg += 'processid is not defined\n';
+			if(!exitcode) errormsg += 'exitcode is not defined\n';
+			if(errormsg !== '') return console.error('Can\'t close process:\n' + errormsg);
+
 			sendRequest('closeProcess', { processid: processid, exitcode: exitcode });
 		},
 

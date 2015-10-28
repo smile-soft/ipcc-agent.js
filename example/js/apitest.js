@@ -11,16 +11,20 @@ window.onerror = function(msg, url, linenumber) {
 ;(function(window, document){
 
     var agent,
-        dialInput,
-        callBtn,
-        answerBtn,
-        dropBtn,
-        closeBtn,
-        pauseBtn,
-        confBtn,
-        processInfo,
-        stateInfo,
-        exitCode;
+        dialInput = document.getElementById('dial-input'),
+        callBtn = document.getElementById('call-btn'),
+        answerBtn = document.getElementById('answer-btn'),
+        dropBtn = document.getElementById('drop-btn'),
+        holdBtn = document.getElementById('hold-btn'),
+        wrapBtn = document.getElementById('wrap-btn'),
+        closeBtn = document.getElementById('close-btn'),
+        pauseBtn = document.getElementById('pause-btn'),
+        confBtn = document.getElementById('conf-btn'),
+        processInfo = document.getElementById('process-info'),
+        stateInfo = document.getElementById('state-info'),
+        exitCode = document.getElementById('exit-code'),
+        code,
+        comment;
 
     function addEvent(obj, evType, fn) {
       if (obj.addEventListener) obj.addEventListener(evType, fn, false);
@@ -56,16 +60,6 @@ window.onerror = function(msg, url, linenumber) {
     }
 
     function init(){
-        dialInput = document.getElementById('dial-input');
-        callBtn = document.getElementById('call-btn');
-        answerBtn = document.getElementById('answer-btn');
-        dropBtn = document.getElementById('drop-btn');
-        closeBtn = document.getElementById('close-btn');
-        pauseBtn = document.getElementById('pause-btn');
-        confBtn = document.getElementById('conf-btn');
-        processInfo = document.getElementById('process-info');
-        stateInfo = document.getElementById('state-info');
-        exitCode = document.getElementById('exit-code');
 
         addEvent(callBtn, 'click', call);
         addEvent(answerBtn, 'click', answer);
@@ -73,8 +67,29 @@ window.onerror = function(msg, url, linenumber) {
         addEvent(closeBtn, 'click', close);
         addEvent(confBtn, 'click', conf);
         addEvent(pauseBtn, 'click', pause);
+        addEvent(holdBtn, 'click', hold);
+        addEvent(wrapBtn, 'click', idle);
         
+        // Initiate module and subscribe on events
         agent = SmileSoft.Agent();
+        
+        agent.on('Error', function (params){
+          console.error('Error: ', params);
+        });
+        
+        agent.on('ready', function (){
+          console.log('Module initiated');
+        });
+        
+        agent.on('statechange', function (params){
+          console.log('onstatechange:', params);
+          stateInfo.textContent = JSON.stringify(params);
+        });
+        
+        agent.on('processchange', function (params){
+          console.log('onprocesschange:', params);
+          processInfo.textContent = JSON.stringify(params);
+        });
     }
 
     function call(){
@@ -86,44 +101,37 @@ window.onerror = function(msg, url, linenumber) {
         agent.answer();
     }
 
-    function drop(){
-        agent.drop();
-    }
-
-    function close(){
-        var code = exitCode.value;
-        if(code === '' || code === undefined || code === null) return;
-        agent.close(agent.process.pid, parseInt(code, 10));
-    }
-
-    function pause(){
-        if(agent.state === 1)
-            agent.pause(0);
-        else
-            agent.pause(63);
-    }
-
     function conf(){
         agent.conference();
     }
 
-    SmileSoft.on('Error', function (params){
-      console.log('Error: ', params);
-    });
+    function hold(){
+        agent.hold();
+    }
 
-    SmileSoft.on('Agent.moduleInitiated', function (){
-      console.log('Module initiated');
-    });
+    function drop(){
+        agent.drop();
+    }
 
-    SmileSoft.on('Agent.statechange', function (params){
-      console.log('onstatechange:', params);
-      stateInfo.textContent = JSON.stringify(params);
-    });
+    function idle(){
+        agent.idle();
+    }
 
-    SmileSoft.on('Agent.processchange', function (params){
-      console.log('onprocesschange:', params);
-      processInfo.textContent = JSON.stringify(params);
-    });
+    function close(){
+        code = exitCode.value;
+        if(code === '' || code === undefined) return;
+        agent.close(agent.process.pid, parseInt(code, 10));
+    }
+
+    function pause(){
+        if(agent.state === 1) {
+            agent.idle();
+        } else {
+            code = window.prompt('Set pause state', 63);
+            comment = window.prompt('Set pause comment', 'Work pause');
+            if(code !== '' || code !== undefined) agent.pause(parseInt(code, 10), comment);
+        }
+    }
 
     init();
 
