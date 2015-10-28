@@ -14,7 +14,7 @@ It exposes a simple API to operate main Agent's functionality, such as:
 
 ### Getting started
 1. Download and unzip library's files
-2. Add scripts `IPCCAgent.js` or minified version `IPCCAgent.min.js` to your web application's html flies
+2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application's html flies
 ```
 <script src="IPCCAgent.js"></script>
 ```
@@ -28,7 +28,7 @@ Note: If you are using Smile IPCC built-in web server for your web application, 
 
 `<path to Smile IPCC directory on the server>/web/`
 
-otherwise put files to your web server accordingly to web application structure.
+otherwise put files to your web server accordingly to your web application structure.
 
 ### How to use
 Library's API expose the following mothods:
