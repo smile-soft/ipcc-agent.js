@@ -147,10 +147,10 @@ Switch to PAUSE state with the specified pause code
 To handle errors you can subscribe for `Error` event.
 ```js
 SmileSoft.on('Agent.Error', handler);
-or
+//or
 agent.on('Error', handler);
 ```
-Parameters:
+Error parameters object:
 - `module`: module name, which emit the error
 - `error`: error object
 
