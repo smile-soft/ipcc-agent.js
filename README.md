@@ -18,6 +18,29 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Fallback to XMLHttpRequest if browser has no Websocket protocol support
 - Pub/Sub implementation for custom event management
 
+### Prerequisites
+To use module you must first install Smile IPCC Agent application and obtain login and password to register it on the IPCC server. Please, contact your contact center administrator to get additional information. 
+
+### Example usage
+```js
+// Initiate agent's module
+var agent = SmileSoft.Agent();
+
+// Subscribe for module events
+agent.on('ready', function(){
+  console.log('Agent's module initiated');
+});
+
+agent.on('statechange', function(params){
+  console.log('Current agent state is: ', params.state);
+  console.log('Current agent substate is: ', params.substate);
+});
+
+agent.on('processchange', function(params){
+  console.log('Current process parameters object: ', params);
+});
+```
+
 ### Installation
 1. Download and unzip module's archive
 2. Add script `IPCCAgent.js` or minified version of it `IPCCAgent.min.js` to your web application html flies
@@ -54,6 +77,8 @@ Option          | Type            | Description
 `server`        | `String`        | IPCC server IP address and port (if other from 80/443). Do not specify if your web app is hosted on the built-in web server, this option will be set automatically.
 `websockets`    | `Boolean`       | Default `true`. Set `false` to switch to `XMLHttpRequest`.
 `updateInterval`| `Number`        | Default `1000` ms (1 second). If `websockets` is `false`, this defines how often module will request updates from IPCC server
+
+Note: At the time when module connected to the IPCC server, you'll be prompted to enter login and password of IPCC agent account. Please, contact your contact center administrator to get additional information.
 
 #### Event management
 Ways to subscribe for event
@@ -149,6 +174,7 @@ To handle errors you can subscribe for `Error` event.
 ```js
 SmileSoft.on('Agent.Error', handler);
 //or
+var agent = SmileSoft.Agent();
 agent.on('Error', handler);
 ```
 Error object passed to the callback function:
