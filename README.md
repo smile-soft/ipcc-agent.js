@@ -12,6 +12,8 @@ It exposes a simple API to operate main Agent's functionality, such as:
 - Close specified process
 - Get current state and process
 
+[Detailed about Smile IP Contact Center](https://smile-soft.com/index.php/en/ipcc-overview)
+
 ### Features implemented out of the box
 - Websocket connection and events management
 - Websocket reconnection exponential backoff algorithm
