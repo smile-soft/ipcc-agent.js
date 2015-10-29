@@ -44,17 +44,19 @@ window.onerror = function(msg, url, linenumber) {
         else if(state === 1)
             fstate = 'Pause';
         else if(state === 3)
-            fstate = 'Incoming call from';
+            fstate = 'Incoming call';
         else if(state === 4)
-            fstate = 'Outgoing call to';
-        else if(state === 5 || state === 9)
-            fstate = 'Connected with';
+            fstate = 'Outgoing call';
+        else if(state === 5)
+            fstate = 'Connected (incoming call)';
         else if(state === 6)
             fstate = 'Wrap';
         else if(state === 7)
             fstate = 'Generic Task';
         else if(state === 8)
             fstate = 'Idle';
+        else if(state === 9)
+            fstate = 'Connected (outgoing call)';
 
         return fstate;
     }
