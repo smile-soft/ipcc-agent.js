@@ -32,12 +32,12 @@ agent.on('ready', function() {
 });
 
 agent.on('statechange', function(stateParams) {
-  console.log('Current agent state is: ', stateParams.state);
-  console.log('Current agent substate is: ', stateParams.substate);
+  console.log('Current agent state is: ' + stateParams.state);
+  console.log('Current agent substate is: ' + stateParams.substate);
 });
 
 agent.on('processchange', function(processParams) {
-  console.log('Current process parameters object: ', processParams);
+  console.log('Current process parameters object: ' + JSON.stringify(processParams));
 });
 ```
 
