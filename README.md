@@ -28,7 +28,7 @@ var agent = SmileSoft.Agent();
 
 // Subscribe for module events
 agent.on('ready', function() {
-  console.log('Agent's module initiated');
+  console.log('Agent module initiated');
 });
 
 agent.on('statechange', function(stateParams) {
