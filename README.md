@@ -27,16 +27,16 @@ To use module you must first install Smile IPCC Agent application and obtain log
 var agent = SmileSoft.Agent();
 
 // Subscribe for module events
-agent.on('ready', function(){
+agent.on('ready', function() {
   console.log('Agent's module initiated');
 });
 
-agent.on('statechange', function(params){
+agent.on('statechange', function(params) {
   console.log('Current agent state is: ', params.state);
   console.log('Current agent substate is: ', params.substate);
 });
 
-agent.on('processchange', function(params){
+agent.on('processchange', function(params) {
   console.log('Current process parameters object: ', params);
 });
 ```
