@@ -31,13 +31,13 @@ agent.on('ready', function() {
   console.log('Agent's module initiated');
 });
 
-agent.on('statechange', function(params) {
-  console.log('Current agent state is: ', params.state);
-  console.log('Current agent substate is: ', params.substate);
+agent.on('statechange', function(stateParams) {
+  console.log('Current agent state is: ', stateParams.state);
+  console.log('Current agent substate is: ', stateParams.substate);
 });
 
-agent.on('processchange', function(params) {
-  console.log('Current process parameters object: ', params);
+agent.on('processchange', function(processParams) {
+  console.log('Current process parameters object: ', processParams);
 });
 ```
 
