@@ -131,7 +131,7 @@ Parameters:
 - `caller`: caller number
 - `called`: called number
 - `username`: caller name (if identified)
-- `userinfo`: list of fields of client's card in format "param":"value"
+- `userinfo`: list of fields of client's card in format "key":"value"
 
 ### API
 Your can use module's API like this:
